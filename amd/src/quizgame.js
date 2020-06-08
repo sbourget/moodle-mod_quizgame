@@ -25,7 +25,7 @@
  * @copyright 2016 John Okely <john@moodle.com>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-define(['jquery','core/yui', 'core/notification', 'core/ajax'], function($, Y, notification, ajax) {
+define(['jquery', 'core/yui', 'core/notification', 'core/ajax'], function($, Y, notification, ajax) {
     var questions;
     var quizgame;
     var stage;
@@ -61,7 +61,7 @@ define(['jquery','core/yui', 'core/notification', 'core/ajax'], function($, Y, n
     var context;
     var inFullscreen = false;
 
-    $('#mod_quizgame_fullscreen_button').on('click', function () {
+    $('#mod_quizgame_fullscreen_button').on('click', function() {
         if (inFullscreen) {
             inFullscreen = false;
             smallscreen();
@@ -396,26 +396,25 @@ define(['jquery','core/yui', 'core/notification', 'core/ajax'], function($, Y, n
         }
     }
 
-    function Rectangle(left, top, width, height)
-    {
+    function Rectangle(left, top, width, height) {
         this.left = left || 0;
         this.top = top || 0;
         this.width = width || 0;
         this.height = height || 0;
     }
-    Rectangle.prototype.right = function () {
+    Rectangle.prototype.right = function() {
         return this.left + this.width;
     };
-    Rectangle.prototype.bottom = function () {
+    Rectangle.prototype.bottom = function() {
         return this.top + this.height;
     };
-    Rectangle.prototype.Contains = function (point) {
+    Rectangle.prototype.Contains = function(point) {
         return point.x > this.left &&
             point.x < this.right() &&
             point.y > this.top &&
             point.y < this.bottom();
     };
-    Rectangle.prototype.Intersect = function (rectangle) {
+    Rectangle.prototype.Intersect = function(rectangle) {
         var retval = !(rectangle.left > this.right() ||
             rectangle.right() < this.left ||
             rectangle.top > this.bottom() ||
@@ -435,14 +434,14 @@ define(['jquery','core/yui', 'core/notification', 'core/ajax'], function($, Y, n
         this.alive = true;
         this.decay = 0.7;
     }
-    GameObject.prototype.loadImage = function (src) {
+    GameObject.prototype.loadImage = function(src) {
         if (!this.image) {
             this.image = new Image();
         }
         this.image.src = src;
         return this.image;
     };
-    GameObject.prototype.update = function () {
+    GameObject.prototype.update = function() {
         this.velocity.x += this.direction.x * this.movespeed.x;
         this.velocity.y += this.direction.y * this.movespeed.y;
         this.x += this.velocity.x;
@@ -450,13 +449,13 @@ define(['jquery','core/yui', 'core/notification', 'core/ajax'], function($, Y, n
         this.velocity.y *= this.decay;
         this.velocity.x *= this.decay;
     };
-    GameObject.prototype.draw = function (context) {
+    GameObject.prototype.draw = function(context) {
         context.drawImage(this.image, this.x, this.y, this.image.width, this.image.height);
     };
-    GameObject.prototype.getRect = function () {
+    GameObject.prototype.getRect = function() {
         return new Rectangle(this.x, this.y, this.image.width, this.image.height);
     };
-    GameObject.prototype.die = function () {
+    GameObject.prototype.die = function() {
         this.alive = false;
     };
 
@@ -497,7 +496,7 @@ define(['jquery','core/yui', 'core/notification', 'core/ajax'], function($, Y, n
             this.y = bounds.height - this.image.height;
         }
     };
-    Player.prototype.Shoot = function () {
+    Player.prototype.Shoot = function() {
         playSound("laser");
         gameObjects.unshift(new Laser(player.x, player.y, true, 24));
         canShoot = false;
@@ -593,7 +592,7 @@ define(['jquery','core/yui', 'core/notification', 'core/ajax'], function($, Y, n
             shipReachedEnd.call(this);
         }
     };
-    Enemy.prototype.draw = function (context) {
+    Enemy.prototype.draw = function(context) {
         GameObject.prototype.draw.call(this, context);
 
         context.fillStyle = '#FFFFFF';
@@ -619,7 +618,7 @@ define(['jquery','core/yui', 'core/notification', 'core/ajax'], function($, Y, n
     };
 
     function killAllAlive() {
-        currentTeam.forEach(function (enemy) {
+        currentTeam.forEach(function(enemy) {
             if (enemy.alive) {
                 // Make the fraction 0 so it won't count as anything and make a new level.
                 enemy.fraction = 0;
@@ -770,7 +769,7 @@ define(['jquery','core/yui', 'core/notification', 'core/ajax'], function($, Y, n
         }
         this.velocity.y = this.laserSpeed * this.direction.y;
     };
-    Laser.prototype.deflect = function () {
+    Laser.prototype.deflect = function() {
         this.image = this.loadImage("pix/enemylaser.png");
         this.direction.y *= -1;
         this.friendly = !this.friendly;
@@ -801,7 +800,7 @@ define(['jquery','core/yui', 'core/notification', 'core/ajax'], function($, Y, n
             this.alive = false;
         }
     };
-    Particle.prototype.getRect = function () {
+    Particle.prototype.getRect = function() {
         return new Rectangle(this.x, this.y, this.width, this.height);
     };
     Particle.prototype.draw = function (context) {
@@ -825,7 +824,7 @@ define(['jquery','core/yui', 'core/notification', 'core/ajax'], function($, Y, n
             this.alive = false;
         }
     };
-    Star.prototype.draw = function (context) {
+    Star.prototype.draw = function(context) {
         context.fillStyle = '#9999AA';
         context.fillRect(this.x, this.y, this.width, this.height);
         context.stroke();
@@ -914,7 +913,7 @@ define(['jquery','core/yui', 'core/notification', 'core/ajax'], function($, Y, n
     }
 
     function shipReachedEnd() {
-        var amountLeft = currentTeam.filter(function (enemy) { return enemy.alive; }).length;
+        var amountLeft = currentTeam.filter(function(enemy) { return enemy.alive; }).length;
 
         if (amountLeft === 0 && (currentPointsLeft < this.fraction || currentPointsLeft <= 0)
             && this.level === level && player.alive) {
@@ -1006,7 +1005,7 @@ define(['jquery','core/yui', 'core/notification', 'core/ajax'], function($, Y, n
     }
 
     function touchstart(e) {
-        if (e.target === stage ) {
+        if (e.target === stage) {
             if (player.alive && e.touches.length > 1) {
                 player.Shoot();
             } else {
@@ -1047,7 +1046,9 @@ define(['jquery','core/yui', 'core/notification', 'core/ajax'], function($, Y, n
     }
 
     function shuffle(array) {
-        var currentIndex = array.length, temporaryValue, randomIndex;
+        var currentIndex = array.length;
+        var temporaryValue = 0;
+        var randomIndex = 0;
 
         while (0 !== currentIndex) {
 
